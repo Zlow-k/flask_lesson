@@ -15,7 +15,9 @@ from flask_debugtoolbar import DebugToolbarExtension
 # Flaskクラスをインスタンス化
 app = Flask(__name__)
 
-app.debug = True
+# デバッグモードの切り替え
+# app.debug = True
+
 # SECRET_KEYの追加
 app.config["SECRET_KEY"] = "2AZSMss3p5qPbcY2hBsJ"
 # ログレベルを設定する
