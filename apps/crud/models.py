@@ -11,9 +11,9 @@ class User(db.Model):
     username = db.Column(db.String, index=True)
     email = db.Column(db.String, index=True, unique=True)
     password_hash = db.Column(db.String)
-    create_at = db.Column(db.Datetime, default=datetime.now)
+    create_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(
-        db.Datetime, default=datetime.now, onupdate=datetime.now
+        db.DateTime, default=datetime.now, onupdate=datetime.now
     )
     
     # パスワードをセットするためのプロパティ
