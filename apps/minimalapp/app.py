@@ -1,3 +1,5 @@
+import logging
+import os
 from email_validator import validate_email, EmailNotValidError
 from flask import (
     Flask, 
@@ -8,9 +10,11 @@ from flask import (
     url_for, 
     redirect,
     flash,
+    make_response,
+    session,
 )
-import logging
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_mail import Mail, Message
 
 # Flaskクラスをインスタンス化
 app = Flask(__name__)
@@ -26,6 +30,16 @@ app.logger.setLevel(logging.DEBUG)
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 # DebugToolbarExtensionにアプリケーションをセットする
 toolbar = DebugToolbarExtension(app)
+
+# Mailクラスのコンフィグを追加
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")
+app.config["MAIL_PORT"] = os.environ.get("MAIL_PORT")
+app.config["MAIL_USE_TLS"] = os.environ.get("MAIL_USE_TLS")
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
+
+mail = Mail(app)
 
 @app.route("/")
 def index():
@@ -43,7 +57,13 @@ def show_name(name):
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    response = make_response(render_template("contact.html"))
+    
+    response.set_cookie("flaskbook key", "flask value")
+    
+    session["username"] = "ichiro"
+    
+    return response
 
 @app.route("/contact/complete", methods=["GET", "POST"])
 def contact_complete():
@@ -79,10 +99,23 @@ def contact_complete():
         
         
         # メールを送る
-        
+        send_email(
+            email,
+            "問い合わせありがとうございました。",
+            "contact_mail",
+            username=username,
+            description=description,
+        )
         
         # contactエンドポイントへリダイレクトする
         flash("お問い合わせありがとうございました。")
         return redirect(url_for("contact_complete"))
     
     return render_template("contact_complete.html")
+
+def send_email(to, subject, template, **kwargs):
+    """メール送信関数"""
+    msg = Message(subject, recipients=[to])
+    msg.body = render_template(template + ".txt", **kwargs)
+    msg.html = render_template(template + ".html", **kwargs)
+    mail.send(msg)
