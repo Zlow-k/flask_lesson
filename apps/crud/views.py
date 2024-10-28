@@ -21,7 +21,7 @@ def sql():
     db.session.query(User).all()
     return "コンソールログを確認してください"
 
-@crud.route("/user/new", methods=["GET", "POST"])
+@crud.route("/users/new", methods=["GET", "POST"])
 def create_user():
     form = UserFrom()
     if form.validate_on_submit():
@@ -35,3 +35,9 @@ def create_user():
         
         return redirect(url_for("crud.users"))
     return render_template("crud/create.html", form=form)
+
+@crud.route("/users")
+def users():
+    """ユーザーの一覧を取得する"""
+    users = User.query.all()
+    return render_template("crud/index.html", users=users)
