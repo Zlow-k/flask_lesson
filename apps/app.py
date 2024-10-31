@@ -4,6 +4,9 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from apps.config import config
+from dotenv import load_dotenv
+
+load_dotenv() 
 
 # SQLAlchemyをインスタンス化
 db = SQLAlchemy()
