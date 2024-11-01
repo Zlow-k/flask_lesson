@@ -1,10 +1,10 @@
-{% extends "curd/base.html" %}
+{% extends "crud/base.html" %}
 {% block title %}ユーザー編集{% endblock %}
 {% block content %}
 <h2>ユーザー編集</h2>
 
 <form 
-    action="{{ url_for('crud.edit_user', user_id=user_id) }}"
+    action="{{ url_for('crud.edit_user', user_id=user.id) }}"
     method="POST"
     novalidate="novalidate"
 >
