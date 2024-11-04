@@ -10,7 +10,7 @@ import torchvision.transforms.functional
 from apps.app import db
 from apps.crud.models import User
 from apps.detector.models import UserImage, UserImageTag
-from apps.detector.forms import UploadImageForm, DetectorForm
+from apps.detector.forms import UploadImageForm, DetectorForm, DeleteForm
 from flask import (
     Blueprint,
     render_template,
@@ -48,11 +48,14 @@ def index():
     
     detector_form = DetectorForm()
     
+    delete_form = DeleteForm()
+    
     return render_template(
         "detector/index.html",
         user_images=user_images,
         user_image_tag_dict = user_image_tag_dict,
         detector_form=detector_form,
+        delete_form=delete_form,
     )
 
 @dt.route("/images/<path:filename>")
@@ -213,4 +216,25 @@ def detect(image_id):
         current_app.logger.error(e)
         return redirect(url_for("detector.index"))
     
+    return redirect(url_for("detector.index"))
+
+@dt.route("/images/delete/<string:image_id>", methods=["POST"])
+@login_required
+def delete_image(image_id):
+    try:
+        # user_image_tagsテーブルからレコードを削除する
+        db.session.query(UserImageTag).filter(
+            UserImageTag.user_image_id == image_id
+        ).delete()
+        
+        #user_imagesテーブルからレコードを削除する
+        db.session.query(UserImage).filter(UserImage.id == image_id).delete()
+        
+        db.session.commit()
+    except SQLAlchemyError as e:
+        flash("画像削除処理でエラーが発生しました。")
+        # ログ出力
+        current_app.logger.error(e)
+        db.session.rollback()
+        
     return redirect(url_for("detector.index"))
