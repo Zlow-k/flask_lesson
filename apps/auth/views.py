@@ -40,7 +40,7 @@ def signup():
         # GETパラメータにnextキーが存在し、値がない場合はユーザーの一覧ページへリダイレクト
         next_ = request.args.get("next")
         if next_ is None or not next_.startswith("/"):
-            next_ = url_for("crud.users")
+            next_ = url_for("detector.index")
         return redirect(next_)
     
     return render_template("auth/signup.html", form=form)
@@ -55,7 +55,7 @@ def login():
         # ユーザーが存在しパスワードが一致する場合は許可する
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
-            return redirect(url_for("crud.users"))
+            return redirect(url_for("detector.index"))
         
         # 失敗時のメッセージを設定
         flash("メールアドレスかパスワードが不正です。")
