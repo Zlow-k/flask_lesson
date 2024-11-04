@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # db.Modelを継承したUserクラスを作成
-class User(db.Model, UserMixin):
+class User(UserMixin, db.Model):
     __tablename__ = "users"
     # カラムの定義
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +15,10 @@ class User(db.Model, UserMixin):
     create_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now
+    )
+    
+    user_images = db.relationship(
+        "UserImage", backref="user", order_by="desc(UserImage.id)"
     )
     
     # パスワードをセットするためのプロパティ
