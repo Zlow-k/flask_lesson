@@ -109,10 +109,12 @@ class LocalConfig(BaseConfig):
         SQLALCHEMY_ECHO = True
         
 class TestingConfig(BaseConfig):
-        SQLALCHEMY_DATABASE_URI = \
-            f"sqlite:///{basedir / 'testing.sqlite'}"
-        SQLALCHEMY_TRACK_MODIFICATIONS = False
-        WTF_CSRF_ENABLE = False
+    SQLALCHEMY_DATABASE_URI = \
+        f"sqlite:///{basedir / 'testing.sqlite'}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    WTF_CSRF_ENABLED = False
+    # 画像アップロード先にtests/detector/imagesを指定する
+    UPLOAD_FOLDER = str(Path(basedir, "tests", "detector", "images"))
 
 config = {
     "testing": TestingConfig,

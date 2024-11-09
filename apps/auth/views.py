@@ -1,5 +1,5 @@
 from apps.app import db
-from apps.auth.forms import SignUoForm, LoginForm
+from apps.auth.forms import SignUpForm, LoginForm
 from apps.crud.models import User
 from flask import Blueprint, render_template, flash, url_for, redirect, request
 from flask_login import login_user, logout_user
@@ -19,7 +19,7 @@ def index():
 @auth.route("/signup", methods=["GET", "POST"])
 def signup():
     # SignUpFormをインスタンス化する
-    form = SignUoForm()
+    form = SignUpForm()
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
