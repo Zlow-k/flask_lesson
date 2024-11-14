@@ -11,7 +11,8 @@ instance/*
 *.pt
 apps/images/
 local.sqlite
-*.sqlite
+testing.sqlite
+
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
