@@ -12,6 +12,7 @@ instance/*
 apps/images/
 local.sqlite
 testing.sqlite
+flask_ml.code-workspace
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
